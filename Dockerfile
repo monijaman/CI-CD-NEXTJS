@@ -7,7 +7,8 @@ COPY package*.json ./
 
 # Install dependencies
 # RUN npm ci  npm install --save-dev typescript
-RUN npm ci --only=production
+RUN npm ci --omit=dev
+# Install production dependencies
 
 # Copy application code
 COPY . .
