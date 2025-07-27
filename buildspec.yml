@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+      docker: 20
+    commands:
+      - echo Installing dependencies...
+
+  pre_build:
+    commands:
+      - echo Running linting...
+      - npm ci --legacy-peer-deps
+      - npm run lint
+      - echo Build started on `date`
+
+  build:
+    commands:
+      - echo Building the Next.js SSR app...
+      - npm run build
+      - echo Build completed on `date`
+
+artifacts:
+  files:
+    - "**/*"
+  exclude-paths:
+    - node_modules/**/*
+    - .git/**/*
+  name: nextjs-ssr-$CODEBUILD_BUILD_NUMBER
