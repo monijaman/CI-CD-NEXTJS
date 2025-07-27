@@ -2,9 +2,9 @@ name: Deploy Next.js SSR to AWS
 
 on:
   push:
-    branches: [main]
+    branches: [GitHub_Actions]
   pull_request:
-    branches: [main]
+    branches: [GitHub_Actions]
 
 jobs:
   build-and-deploy:
