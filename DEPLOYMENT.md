@@ -65,12 +65,12 @@
 
 | **Component** | **Status** | **Details** |
 |---------------|------------|-------------|
-| **EC2 Instance** | ✅ **Running** | `18.136.198.116` - New IP address |
+| **EC2 Instance** | ✅ **Running** | `18.136.198.116` - SSH connection confirmed |
 | **Security Groups** | ✅ **Configured** | SSH port 22 open from 0.0.0.0/0 |
 | **Repository Secrets** | ❌ **OUTDATED** | EC2_HOST still points to old IP |
 | **GitHub Actions** | ❌ **FAILING** | drone-scp timeout - old IP in secrets |
-| **Self-Hosted Runner** | ❓ **Unknown** | Cannot verify due to IP mismatch |
-| **Local Connection** | ⚠️ **TEST NEEDED** | Need to test new IP connectivity |
+| **Local Connection** | ✅ **WORKING** | SSH successful to new IP |
+| **Self-Hosted Runner** | ⚠️ **NEEDS UPDATE** | Runner may need reconfiguration |
 
 **🚨 CRITICAL ISSUE:** GitHub Actions using old IP (18.141.159.49) - Update EC2_HOST secret to 18.136.198.116
 
@@ -269,17 +269,17 @@ git push origin main
 
 **🔍 NEXT INVESTIGATION STEPS:**
 
-3. **🚨 Network Connectivity Test (CRITICAL FINDING)**
+3. **✅ Network Connectivity Test (CONFIRMED WORKING)**
    ```bash
-   # CONFIRMED: Complete network isolation
-   ping 18.136.198.116                    # 100% packet loss
-   ping ec2-18-136-198-116.ap-southeast-1.compute.amazonaws.com  # 100% packet loss
+   # SSH Connection Test Results:
+   ssh -i "D:\pem\ec2-runner.pem" ubuntu@18.136.198.116 "echo 'Connection successful'"
+   # Result: Connection successful ✅
    
-   # DNS resolution works: hostname → 18.136.198.116 ✅
-   # Network routing fails: cannot reach IP ❌
+   # Basic ping test:
+   ping 18.136.198.116  # Timeout (normal - ICMP often blocked)
    ```
    
-   **🚨 ROOT CAUSE IDENTIFIED:** IP Address Changed - Update all configurations!
+   **✅ ROOT CAUSE CONFIRMED:** SSH works! GitHub Actions needs IP update
 
 4. **⚠️ Network ACLs Check (HIGH PRIORITY)**
    ```bash
