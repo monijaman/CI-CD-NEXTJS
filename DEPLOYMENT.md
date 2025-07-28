@@ -1,3 +1,27 @@
+# Troubleshooting: Docker build fails with 'No space left on device'
+
+If you see errors like:
+
+    chown: /app/node_modules/...: No space left on device
+    ERROR: failed to build: failed to solve: process "/bin/sh -c chown -R node:node /app" did not complete successfully: exit code: 1
+
+This means your disk is full. To fix:
+
+1. Free up disk space:
+   - Remove unused Docker images: `docker image prune -a`
+   - Remove stopped containers: `docker container prune`
+   - Remove unused volumes: `docker volume prune`
+   - Remove unused networks: `docker network prune`
+   - Delete unnecessary files from your server.
+
+
+df -h
+
+to see space left
+
+2. Optionally, increase your EC2 instance's disk size.
+
+After freeing space, retry your Docker build.
 # CI/CD Deployment Documentation
 ## Next.js Application on AWS EC2 wi| **GitHub Actions** | ✅ **DEPLOYING** | Fixed Docker commands, testing deployment |
 | **Local Connection** | ✅ **WORKING** | SSH successful to new IP |
