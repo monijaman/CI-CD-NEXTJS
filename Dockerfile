@@ -32,4 +32,5 @@ ENV NODE_ENV=production
 
 
 # Launch app with PM2
-CMD ["pm2-runtime", "start", "npm", "--", "run", "start"]
+CMD ["npm", "start"]
+# CMD ["pm2-runtime", "start", "npm", "--", "run", "start"]
