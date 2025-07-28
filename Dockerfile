@@ -17,7 +17,7 @@ RUN npm install  --legacy-peer-deps
 # Copy application code
 COPY . .
 
-# Build the application
+# Build the application.
 RUN npm run build
 
 # Change ownership to the non-root user (fixed to the correct path)
@@ -29,7 +29,7 @@ EXPOSE 3000
 # Set NODE_ENV to production for production builds
 ENV NODE_ENV=production
 
- 
+
 
 # Launch app with PM2
 CMD ["pm2-runtime", "start", "npm", "--", "run", "start"]
