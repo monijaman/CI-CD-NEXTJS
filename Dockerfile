@@ -26,7 +26,7 @@ RUN chown -R node:node /app
 # Expose the listening port
 EXPOSE 3000
 
-# Set NODE_ENV to production for production builds
+# Set NODE_ENV to production for production builds.
 ENV NODE_ENV=production
 
 
