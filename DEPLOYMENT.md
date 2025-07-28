@@ -1,5 +1,9 @@
 # CI/CD Deployment Documentation
-## Next.js Application on AWS EC2 with GitHub Actions
+## Next.js Application on AWS EC2 wi| **GitHub Actions** | ✅ **DEPLOYING** | Fixed Docker commands, testing deployment |
+| **Local Connection** | ✅ **WORKING** | SSH successful to new IP |
+| **Self-Hosted Runner** | ✅ **ACTIVE** | Runner executing deployment commands |
+
+**🚀 PROGRESS:** Connection fixed! Deployment issues resolved - Testing new deploymenttHub Actions
 
 ---
 
