@@ -67,12 +67,12 @@
 |---------------|------------|-------------|
 | **EC2 Instance** | ✅ **Running** | `18.136.198.116` - SSH connection confirmed |
 | **Security Groups** | ✅ **Configured** | SSH port 22 open from 0.0.0.0/0 |
-| **Repository Secrets** | ❌ **OUTDATED** | EC2_HOST still points to old IP |
-| **GitHub Actions** | ❌ **FAILING** | drone-scp timeout - old IP in secrets |
+| **Repository Secrets** | ✅ **UPDATED** | EC2_HOST now points to correct IP |
+| **GitHub Actions** | ⚠️ **DEPLOYING** | SSH working, Docker commands failing |
 | **Local Connection** | ✅ **WORKING** | SSH successful to new IP |
-| **Self-Hosted Runner** | ⚠️ **NEEDS UPDATE** | Runner may need reconfiguration |
+| **Self-Hosted Runner** | ✅ **ACTIVE** | Runner executing deployment commands |
 
-**🚨 CRITICAL ISSUE:** GitHub Actions using old IP (18.141.159.49) - Update EC2_HOST secret to 18.136.198.116
+**� PROGRESS:** Connection fixed! Now debugging Docker deployment commands
 
 ---
 
@@ -224,7 +224,44 @@ debug1: connect to address 18.136.198.116 port 22: Connection timed out
 ssh: connect to host 18.136.198.116 port 22: Connection timed out
 ```
 
-#### **Drone-SCP Timeout Error (CURRENT ISSUE)**
+#### **Current Deployment Issues (NEW)**
+```bash
+# Latest GitHub Actions Log:
+err: bash: line 2: unzip: command not found
+err: unknown shorthand flag: 'd' in -d
+err: See 'docker --help'.
+err: Usage: docker [OPTIONS] COMMAND
+```
+
+**🎉 PROGRESS:** SSH connection and file transfer now working!
+
+**🔧 CURRENT ISSUES:**
+1. **Missing `unzip` package** on EC2 instance
+2. **Docker command syntax error** - incorrect `-d` flag usage
+
+**✅ IMMEDIATE FIXES:**
+
+**Fix 1: Install unzip on EC2**
+```bash
+# Connect to EC2 and install unzip
+ssh -i "D:\pem\ec2-runner.pem" ubuntu@18.136.198.116
+sudo apt update && sudo apt install -y unzip
+```
+
+**Fix 2: Correct Docker Command Syntax**
+```bash
+# Current (INCORRECT): docker compose up -d --build
+# Should be: docker-compose up -d --build
+# OR: docker compose up --detach --build
+```
+
+**Fix 3: Verify Docker Compose Installation**
+```bash
+# Check if docker-compose is installed
+docker-compose --version
+# If not installed:
+sudo apt install -y docker-compose
+```
 ```
 drone-scp version: v1.6.14
 tar all files into /tmp/JKlZmNsCFQ.tar.gz

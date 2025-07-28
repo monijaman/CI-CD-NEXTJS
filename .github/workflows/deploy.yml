@@ -53,4 +53,4 @@ jobs:
           script: |
             cd ~/CI-CD-NEXTJS
             unzip -o ~/deployment.zip
-            docker compose up -d --build
+            docker-compose up -d --build
