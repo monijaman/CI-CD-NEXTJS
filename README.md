@@ -224,28 +224,23 @@ sudo systemctl restart nginx
 > root /var/www/html/CI-CD-NEXTJS;
 > ```
 
----
+#### fatal: detected dubious ownership in repository at '/var/www/html/CI-CD-NEXTJS'
 
-### ⚠️ **Troubleshooting: 404 Not Found for _next/static/**
-
-If you see errors like  
-`GET http://18.141.203.114/_next/static/media/....woff2 404 (Not Found)`
-
-Check the following:
-
-- Make sure you ran `npm run build` before starting your app.
-- Make sure you are running with `npm start` or PM2 (`pm2 start npm -- run start`), not `npm run dev`.
-- The `.next` folder (created by build) must exist in your project directory.
-- Your Nginx config should **not** have a `root` directive inside the `location /` block for Next.js.  
-  Only use `proxy_pass` for Next.js routes.
-
-Example (correct):
-```
-location / {
-    proxy_pass http://localhost:3000;
-    # ...other proxy settings...
-}
+```bash
+git config --global --add safe.directory /var/www/html/CI-CD-NEXTJS
 ```
 
-If you set a `root` inside `location /`, remove it to avoid conflicts.
 
+#### fatal: Unable to create '/var/www/html/CI-CD-NEXTJS/.git/
+
+This means Git doesn't have permission to write inside the .git directory — usually because the folder (or .git inside it) is owned by root or another user.
+
+```bash
+    sudo chown -R ubuntu:ubuntu /var/www/html/CI-CD-NEXTJS
+```
+
+optional: rm -f .git/index.lock
+
+
+### when there is 404 issues
+cp -r .next _next

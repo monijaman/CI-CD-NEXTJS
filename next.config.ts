@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
 
   // Optional: If you serve fonts/static assets from a specific domain
   images: {
-    domains: ['localhost', '18.141.203.114'],
+    domains: ['localhost', '18.136.120.174'],
   },
 };
 
