@@ -29,28 +29,9 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
-      - name: Create deployment package
+        
+      - name: Start app with PM2
         run: |
-          zip -r deployment.zip . -x "node_modules/*" ".git/*" "*.md"
-
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          source: "deployment.zip"
-          target: "~/"
-
-      - name: Run deployment commands on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            cd ~/CI-CD-NEXTJS
-            unzip -o ~/deployment.zip
-            docker-compose up -d --build
+          pm2 delete nextjs-ci-cd || true
+          pm2 start npm --name "nextjs-ci-cd" -- run start
+          pm2 save
