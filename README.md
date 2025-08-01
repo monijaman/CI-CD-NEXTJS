@@ -197,7 +197,7 @@ For production, consider using a process manager like PM2 and a reverse proxy (n
 
 ---
 
-### ⚠️ **Troubleshooting: 502 Bad Gateway (nginx)**
+### ⚠️ **Troubleshooting: 502 Bad Gateway (nginx)**.
 
 If you see "502 Bad Gateway" from nginx, check:
 
