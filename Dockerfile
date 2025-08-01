@@ -23,7 +23,7 @@ RUN npm run build
 # Change ownership to the non-root user (fixed to the correct path)
 RUN chown -R node:node /app
 
-# Expose the listening port
+# Expose the listening port,
 EXPOSE 3000
 
 # Set NODE_ENV to production for production builds.
