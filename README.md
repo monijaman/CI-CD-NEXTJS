@@ -492,3 +492,5 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # Verify installation
 docker-compose version
+
+...
