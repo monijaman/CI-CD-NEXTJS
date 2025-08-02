@@ -265,3 +265,9 @@ Port Range: 3000
 Source: 0.0.0.0/0 (or restrict to your IP for security)
 
 Save rules
+
+
+##  1: Use the correct private RSA key
+
+You must find the private key that matches the above ssh-rsa key.
+
