@@ -271,3 +271,190 @@ Save rules
 
 You must find the private key that matches the above ssh-rsa key.
 
+
+
+
+
+# 🚀 Next.js SSR Deployment to AWS EC2 using GitHub Actions
+
+This guide walks through how to deploy a Next.js SSR application from GitHub to an AWS EC2 instance using GitHub Actions and SSH keys.
+
+---
+
+## ✅ Requirements
+
+- AWS EC2 Ubuntu instance (public IP + port 22 open in security group)
+- Next.js project using `next start`
+- GitHub repository with your code
+- A working SSH key pair (we'll use ED25519)
+- PM2 (used to run the Next.js server persistently)
+
+---
+
+## 🔐 Step 1: Generate and Install SSH Keys
+
+### 🔸 On your local machine:
+
+Generate a new ED25519 key pair:
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "github-ec2-runner"
+```
+
+- This creates:
+  - `~/.ssh/id_ed25519` (private key)
+  - `~/.ssh/id_ed25519.pub` (public key)
+
+---
+
+### 🔸 On the EC2 instance:
+
+1. SSH into EC2 using an existing key:
+   ```bash
+   ssh -i your-aws-key.pem ubuntu@<EC2-PUBLIC-IP>
+   ```
+
+2. Add the public key:
+   ```bash
+   nano ~/.ssh/authorized_keys
+   ```
+
+3. Paste the contents of `id_ed25519.pub` **at the end** of the file.
+
+4. Save and exit.
+
+---
+
+### 🔸 On your local machine:
+
+Test SSH with your new key:
+
+```bash
+ssh -i ~/.ssh/id_ed25519 ubuntu@<EC2-PUBLIC-IP>
+```
+
+✅ If this works, you're ready to automate it.
+
+---
+
+## 🧪 Step 2: Prepare Your EC2 App Directory
+
+1. SSH into the EC2 server:
+
+```bash
+ssh -i ~/.ssh/id_ed25519 ubuntu@<EC2-PUBLIC-IP>
+```
+
+2. Clone your repo if not already cloned:
+
+```bash
+cd ~
+git clone https://github.com/<your-username>/<your-repo>.git CI-CD-NEXTJS
+```
+
+3. Install PM2:
+
+```bash
+npm install -g pm2
+```
+
+---
+
+## 🔐 Step 3: Add Private Key to GitHub
+
+1. Open your private key:
+
+```bash
+cat ~/.ssh/id_ed25519
+```
+
+2. Copy the full contents.
+
+3. In your GitHub repo:
+   - Go to **Settings > Secrets > Actions**
+   - Add a new secret:
+     - Name: `EC2_SSH_KEY`
+     - Value: *(paste full private key)*
+
+---
+
+## ⚙️ Step 4: Add GitHub Actions Workflow
+
+In `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy Next.js SSR to AWS
+
+on:
+  push:
+    branches: [GitHub_Actions]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Zip deployment package
+        run: zip -r deployment.zip . -x "node_modules/*" ".git/*" "*.md"
+
+      - name: Upload to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "deployment.zip"
+          target: "~/"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/CI-CD-NEXTJS
+            unzip -o ~/deployment.zip
+            npm install --legacy-peer-deps
+            pm2 delete nextjs-ci-cd || true
+            pm2 start npm --name "nextjs-ci-cd" -- run start
+            pm2 save
+```
+
+---
+
+## 🔁 Bonus: Secrets to Add in GitHub
+
+| Secret Name      | Description                     |
+|------------------|---------------------------------|
+| `EC2_HOST`       | Your EC2 public IP              |
+| `EC2_SSH_KEY`    | Your **ED25519** private key    |
+
+---
+
+## ✅ Final Notes
+
+- Make sure port **3000** is open in your EC2 security group **or** reverse proxy using NGINX on port 80.
+- You can now deploy on every push to the `GitHub_Actions` branch!
+
+---
+
+Happy coding! 🎉
