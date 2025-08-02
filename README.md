@@ -478,4 +478,4 @@ Remove old log files, temp files:
  
 sudo rm -rf /var/log/*.log
 sudo rm -rf /tmp/*
-Delete unnecessary files from your home directory or project folder.
+Delete unnecessary files from your home directory or project folder..
