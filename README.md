@@ -244,3 +244,24 @@ optional: rm -f .git/index.lock
 
 ### when there is 404 issues
 cp -r .next _next
+
+ 
+## Add a new inbound rule to allow TCP port 3000:
+Go to your AWS EC2 Console > Security Groups
+
+- Select launch-wizard-4 (your current SG)
+
+- Click on Inbound rules tab
+
+- Click Edit inbound rules
+
+- Click Add rule
+
+Set:
+
+Type: Custom TCP
+Protocol: TCP
+Port Range: 3000
+Source: 0.0.0.0/0 (or restrict to your IP for security)
+
+Save rules
