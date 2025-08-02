@@ -479,3 +479,16 @@ Remove old log files, temp files:
 sudo rm -rf /var/log/*.log
 sudo rm -rf /tmp/*
 Delete unnecessary files from your home directory or project folder..
+
+
+
+### Docker compose:
+
+# Install Docker Compose v2 (recommended for modern systems)
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
+# Make it executable
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Verify installation
+docker-compose version
