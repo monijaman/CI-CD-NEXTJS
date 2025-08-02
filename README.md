@@ -484,13 +484,34 @@ Delete unnecessary files from your home directory or project folder..
 
 ### Docker compose:
 
-# Install Docker Compose v2 (recommended for modern systems)
-sudo curl -SL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+# Update package list
+sudo apt update
 
-# Make it executable
-sudo chmod +x /usr/local/bin/docker-compose
+# Install prerequisites
+sudo apt install -y ca-certificates curl gnupg
 
-# Verify installation
-docker-compose version
+# Add Docker’s official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-...
+# Add Docker’s APT repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update again
+sudo apt update
+
+# Install Docker
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Start Docker
+sudo systemctl start docker
+
+# Enable Docker to start on boot
+sudo systemctl enable docker
+
+# Verify
+docker --version
+docker compose version
