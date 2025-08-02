@@ -458,3 +458,24 @@ jobs:
 ---
 
 Happy coding! 🎉
+
+
+
+What to do?
+1. Check disk space on your EC2 instance:
+ 
+df -h
+Look at % Used for / or other relevant partitions.
+
+2. Free up space:
+Remove unused Docker images, containers, volumes:
+
+ 
+docker system prune -af
+docker volume prune -f
+Remove old log files, temp files:
+
+ 
+sudo rm -rf /var/log/*.log
+sudo rm -rf /tmp/*
+Delete unnecessary files from your home directory or project folder.
