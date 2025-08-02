@@ -457,4 +457,4 @@ jobs:
 
 ---
 
-Happy coding! 🎉.
+Happy coding! 🎉
