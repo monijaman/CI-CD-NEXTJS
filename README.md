@@ -515,3 +515,16 @@ sudo systemctl enable docker
 # Verify
 docker --version
 docker compose version
+
+Add your user to the docker group
+sudo usermod -aG docker $USER
+
+Then reboot your EC2 instance (important!):
+
+ sudo reboot
+
+After reboot, SSH back into your instance and verify it's working:
+
+ 
+
+docker ps
